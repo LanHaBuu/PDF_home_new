@@ -1,33 +1,22 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { Document, Page } from "react-pdf/dist/esm/entry.webpack"
+import HomeInput from "../../components/Input/HomeInput"
+import { InputContext } from "../../Context/InputProvider"
 import "./Home.scss"
 
 const Home: React.FC = () => {
 	const [pageNumber, setPageNumber] = useState(1)
 	const [name, setName] = useState("")
-	// const [input, setInput] = useState("")
+	const value = useContext(InputContext)
 
 	const onDocumentLoadSuccess = () => {
 		setPageNumber(1)
 	}
-
-	// const handleAdd = () => {
-	// 	setInput("")
-	// }
-
+	
 	return (
 		<div className='home-wrapper'>
 			<div className='key'>
-				{/* <div className='add'>
-					<input
-						type='text'
-						value={input}
-						onChange={e => setInput(e.target.value)}
-					/>
-					<button className='btn-add' onClick={handleAdd}>
-						Add
-					</button>
-				</div> */}
+				<HomeInput />
 				<button
 					name='google'
 					onClick={(e: any) => setName(e.target.name)}
@@ -48,14 +37,12 @@ const Home: React.FC = () => {
 				</button>
 			</div>
 			<div className='pdf'>
-				{name && (
-					<Document
-						file={{ url: `pdf/${name}` }}
-						onLoadSuccess={onDocumentLoadSuccess}
-					>
-						<Page pageNumber={pageNumber} />
-					</Document>
-				)}
+				{(name || value?.inputCT) && <Document
+					file={{ url: `${name}` ? `pdf/${name}` : `pdf/${value?.inputCT}` }}
+					onLoadSuccess={onDocumentLoadSuccess}
+				>
+					<Page pageNumber={pageNumber} />
+				</Document>}
 			</div>
 		</div>
 	)
